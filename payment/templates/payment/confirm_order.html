@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container">
+    <!-- هدر تایید نهایی -->
+    <header class="bg-gray py-5">
+        <div class="container text-center px-4 px-lg-5">
+            <div class="mb-10 p-3 bg-primary text-white rounded">
+                <h2 class="display-4 fw-bolder">تایید نهایی</h2>
+                <p class="lead fw-normal text-white-50 mb-0">لطفا بار دیگر چک کنید, صرفا جهت اطمینان</p>
+            </div>
+        </div>
+    </header>
+    <br>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <!-- کارت خلاصه سفارشات -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    خلاصه سفارشات شما:
+                </div>
+                <div class="card-body">
+                    {% for product in cart_products %}
+                    <div class="mb-3">
+                        <strong>{{ product.name }}</strong><br>
+                        <small>
+                            قیمت:
+                            {% if product.is_sale %}
+                            {{ product.sale_price|intcomma }} <!-- 2. اصلاح تگ متغیر -->
+                            {% else %}
+                            {{ product.price|intcomma }}
+                            {% endif %}
+                        </small><br>
+                        <small>
+                            تعداد:
+                            {% for key,value in quantities.items %}
+                            {% if key == product.id|slugify %}
+                            {{ value }}
+                            {% endif %}
+                            {% endfor %}
+                            <!-- 3. استفاده از تگ سفارشی برای دریافت مقدار -->
+                        </small>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                    <div class="mt-3">
+                        <strong>{{ total|intcomma }} تومان</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- کارت مشخصات ارسال -->
+            <div class="card">
+                <div class="card-header">
+                    مشخصات ارسال:
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{% url 'process_order' %}">
+                        {% csrf_token %} <!-- 4. اصلاح تگ csrf_token -->
+                        <div class="mb-2">
+                            <strong>نام و نام خانوادگی:</strong> {{ shipping_info.shipping_full_name }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>ایمیل:</strong> {{ shipping_info.shipping_email }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>آدرس 1:</strong> {{ shipping_info.shipping_address1 }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>آدرس 2:</strong> {{ shipping_info.shipping_address2 }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>شهر:</strong> {{ shipping_info.shipping_city }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>منطقه:</strong> {{ shipping_info.shipping_state }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>کد پستی:</strong> {{ shipping_info.shipping_zipcode }}
+                        </div>
+                        <div class="mb-4">
+                            <strong>کشور:</strong> {{ shipping_info.shipping_country }}
+                        </div>
+                        <button type="submit" class="btn btn-primary">ثبت سفارش و پرداخت</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br><br><br><br><br>
+</div>
+{% endblock %}
