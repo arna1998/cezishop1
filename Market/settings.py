@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-w0#vmz*^+s)f=_@$(&phpu(joehk%v8-*&(wpnme-)k*%z!zvf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['cezishop1.onrender.com']
 
 # Application definition
 
